@@ -49,9 +49,8 @@ const FinalCTA = () => {
           </div>
         </div>
       </div>
+    </section>
   );
 };
 
 export default FinalCTA;
-  )
-}
