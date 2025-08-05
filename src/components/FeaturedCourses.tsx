@@ -1,7 +1,14 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Star, Clock, Users, Award } from 'lucide-react';
+import { useCart } from '../contexts/CartContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const FeaturedCourses = () => {
+  const navigate = useNavigate();
+  const { addToCart, isInCart } = useCart();
+  const { user } = useAuth();
+
   const courses = [
     {
       id: 1,
@@ -57,8 +64,22 @@ const FeaturedCourses = () => {
     }
   ];
 
+  const handleEnrollClick = (course: any) => {
+    if (!user) {
+      alert('Please sign in to enroll in courses');
+      return;
+    }
+    
+    if (!isInCart(course.id)) {
+      addToCart(course);
+      alert('Course added to cart!');
+    } else {
+      alert('Course already in cart!');
+    }
+  };
+
   return (
-    <section className="py-16 bg-gray-50">
+    <section id="featured-courses" className="py-16 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
@@ -73,9 +94,12 @@ const FeaturedCourses = () => {
           {courses.map((course) => (
             <div
               key={course.id}
-              className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group cursor-pointer"
+              className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group"
             >
-              <div className="relative overflow-hidden">
+              <div
+                className="relative overflow-hidden cursor-pointer"
+                onClick={() => navigate(`/course/${course.id}`)}
+              >
                 <img
                   src={course.image}
                   alt={course.title}
@@ -117,8 +141,11 @@ const FeaturedCourses = () => {
                     <span className="text-xl font-bold text-gray-900">₹{course.price}</span>
                     <span className="text-sm text-gray-500 line-through">₹{course.originalPrice}</span>
                   </div>
-                  <button className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium">
-                    Enroll Now
+                  <button
+                    onClick={() => handleEnrollClick(course)}
+                    className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium"
+                  >
+                    {isInCart(course.id) ? 'In Cart' : 'Add to Cart'}
                   </button>
                 </div>
               </div>

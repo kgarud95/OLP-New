@@ -1,31 +1,28 @@
 import React from 'react';
-import Header from './components/Header';
-import Hero from './components/Hero';
-import Categories from './components/Categories';
-import FeaturedCourses from './components/FeaturedCourses';
-import CareerPaths from './components/CareerPaths';
-import Pricing from './components/Pricing';
-import WhyChooseUs from './components/WhyChooseUs';
-import Testimonials from './components/Testimonials';
-import MobileApp from './components/MobileApp';
-import FinalCTA from './components/FinalCTA';
-import Footer from './components/Footer';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
+import { CartProvider } from './contexts/CartContext';
+import HomePage from './pages/HomePage';
+import CourseDetail from './components/Course/CourseDetail';
+import CoursePlayer from './components/Course/CoursePlayer';
+import UserDashboard from './components/Dashboard/UserDashboard';
 
 function App() {
   return (
-    <div className="min-h-screen">
-      <Header />
-      <Hero />
-      <Categories />
-      <FeaturedCourses />
-      <CareerPaths />
-      <Pricing />
-      <WhyChooseUs />
-      <Testimonials />
-      <MobileApp />
-      <FinalCTA />
-      <Footer />
-    </div>
+    <AuthProvider>
+      <CartProvider>
+        <Router>
+          <div className="min-h-screen">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/course/:id" element={<CourseDetail />} />
+              <Route path="/course/:courseId/lesson/:lessonId" element={<CoursePlayer />} />
+              <Route path="/dashboard" element={<UserDashboard />} />
+            </Routes>
+          </div>
+        </Router>
+      </CartProvider>
+    </AuthProvider>
   );
 }
 
