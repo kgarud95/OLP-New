@@ -1,12 +1,41 @@
 import React, { useState } from 'react';
 import { Search, ShoppingCart, Globe, ChevronDown, Menu, X } from 'lucide-react';
+import { useSearch } from '../hooks/useSearch';
+import SearchResults from './SearchResults';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  
+  const {
+    searchQuery,
+    setSearchQuery,
+    selectedCategory,
+    setSelectedCategory,
+    priceRange,
+    setPriceRange,
+    sortBy,
+    setSortBy,
+    filteredCourses,
+    categories,
+    totalResults
+  } = useSearch();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      setShowSearchResults(true);
+    }
+  };
+
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200/20 shadow-sm">
+    <>
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200/20 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -39,14 +68,16 @@ const Header = () => {
               >
                 Categories
                 <ChevronDown className="ml-1 w-4 h-4" />
-              </button>
+                <form onSubmit={handleSearch} className="relative">
               {isDropdownOpen && (
                 <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border py-2">
                   <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">Development</a>
+                    value={searchQuery}
+                    onChange={handleSearchInputChange}
                   <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">Business</a>
                   <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">Design</a>
                   <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">Marketing</a>
-                </div>
+                </form>
               )}
             </div>
             <a href="#" className="text-gray-700 hover:text-purple-600 transition-colors">Become an Instructor</a>
@@ -78,14 +109,16 @@ const Header = () => {
         {isMenuOpen && (
           <div className="lg:hidden border-t border-gray-200 py-4">
             <div className="flex flex-col space-y-4">
-              <div className="relative">
+              <form onSubmit={handleSearch} className="relative w-full">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
                   type="text"
+                  value={searchQuery}
+                  onChange={handleSearchInputChange}
                   placeholder="What do you want to learn?"
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 />
-              </div>
+              </form>
               <a href="#" className="text-gray-700 hover:text-purple-600 transition-colors">Categories</a>
               <a href="#" className="text-gray-700 hover:text-purple-600 transition-colors">Become an Instructor</a>
               <a href="#" className="text-gray-700 hover:text-purple-600 transition-colors">Sign In</a>
@@ -96,7 +129,25 @@ const Header = () => {
           </div>
         )}
       </div>
-    </header>
+      </header>
+
+      {/* Search Results Modal */}
+      {showSearchResults && (
+        <SearchResults
+          courses={filteredCourses}
+          searchQuery={searchQuery}
+          totalResults={totalResults}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          categories={categories}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+          priceRange={priceRange}
+          setPriceRange={setPriceRange}
+          onClose={() => setShowSearchResults(false)}
+        />
+      )}
+    </>
   );
 };
 
