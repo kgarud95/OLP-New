@@ -68,16 +68,14 @@ const Header = () => {
               >
                 Categories
                 <ChevronDown className="ml-1 w-4 h-4" />
-                <form onSubmit={handleSearch} className="relative">
+              </button>
               {isDropdownOpen && (
                 <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border py-2">
                   <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">Development</a>
-                    value={searchQuery}
-                    onChange={handleSearchInputChange}
                   <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">Business</a>
                   <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">Design</a>
                   <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">Marketing</a>
-                </form>
+                </div>
               )}
             </div>
             <a href="#" className="text-gray-700 hover:text-purple-600 transition-colors">Become an Instructor</a>
